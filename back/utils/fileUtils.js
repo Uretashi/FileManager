@@ -6,6 +6,9 @@ const { resolve } = require('path');
  * A File manager class containing methods to interact with a given directory
  * 
  * @property {string} fileDirectory path to the main files directory
+ * @property {{ folders: Array<string>, files: Array<string>}} folderContents full contents of the main directory
+ * 
+ * @method #readFullDirectory : list all files and folders present in the main directory
  * @method readDirectory : list files/folders present in the given directory
  * @method createInDirectory : create a file/folder in the given directory
  * @method removeInDirectory : delete a file/folder in the given directory
@@ -14,6 +17,32 @@ const { resolve } = require('path');
 class FileManager {
     constructor(fileDirectory) {
         this.fileDirectory = fileDirectory.endsWith('/') ? fileDirectory : fileDirectory + '/';
+        this.folderContents = { folders: [], files: [] };
+        this.#readFullDirectory();
+    }
+
+    /**
+     * list all files and directories present in the files directory
+     * 
+     * @param {string} childDirectory child directory path
+     * @returns void
+     */
+    #readFullDirectory(childDirectory = '') {
+        // read the directory
+        let content = this.readDirectory(childDirectory);
+        content.forEach((f) => {
+            // if f is a folder
+            if(!f.includes('.')) {
+                // create the absolute path of the child directory
+                const childDirectoryRoute = childDirectory + '/' + f;
+                this.folderContents.folders.push(childDirectoryRoute);
+                // read the content of the folder
+                this.#readFullDirectory(childDirectoryRoute);
+                return;
+            }
+            // push file absolute file to the directory
+            this.folderContents.files.push(childDirectory + '/' + f);
+        });
     }
 
     /**
