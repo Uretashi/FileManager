@@ -1,7 +1,15 @@
 const fs = require('fs');
 const { resolve } = require('path');
+const express = require('express');
 
 const FileManager = require('./utils/fileUtils');
+const executeCommand = require('./utils/executeCommand');
+const router = require('./utils/router');
+const errorHandler = require('./utils/errorHandler');
+
+const app = express();
+const PORT = 4999;
+
 const fileDirectory = resolve(__dirname, '../fileDirectory');
 
 // check if the files directory exists
@@ -10,6 +18,18 @@ if (!fs.existsSync(fileDirectory)) {
 }
 
 const fileManager = new FileManager(fileDirectory);
+// executeCommand('ls', 'C:\\Program Files\\Git\\bin\\bash');
+
+app.use(express.json());
+app.use(express.urlencoded());
+// adding the router instance
+app.use(router(fileManager));
+// error handler
+app.use(errorHandler);
+// app init
+app.listen(PORT, () => {
+    console.log(`File server is listening on port :${PORT}`);
+});
 
 //-------- TODO create unitary tests for these lines --------
 // create file
