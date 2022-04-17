@@ -57,6 +57,16 @@ class FileManager {
     }
 
     /**
+     * read the content of a file
+     * 
+     * @param {string} filePath path of the file to read
+     * @returns {string} content of the file
+     */
+    readFileContent(filePath) {
+        return fs.readFileSync(this.fileDirectory + filePath, { encoding: 'utf-8' });
+    }
+
+    /**
      * create a new file or directory in the files folder
      * 
      * @param {string} name name of the new file/folder
@@ -69,6 +79,9 @@ class FileManager {
         } else {
             fs.mkdirSync(structuredPath);
         }
+        // update contents
+        this.folderContents = { folders: [], files: [] };
+        this.#readFullDirectory();
     }
 
     /**
@@ -82,6 +95,9 @@ class FileManager {
         const structuredPath = resolve(this.fileDirectory, name);
         // define the recursivity if the object is a folder
         fs.rmSync(structuredPath, isFile ? {} : { recursive: true, force: true });
+        // update contents
+        this.folderContents = { folders: [], files: [] };
+        this.#readFullDirectory();
     }
 
     /**
@@ -104,6 +120,9 @@ class FileManager {
 
         // remove the copied object
         this.removeInDirectory(structuredOldPath, isFile);
+        // update contents
+        this.folderContents = { folders: [], files: [] };
+        this.#readFullDirectory();
     }
 }
 

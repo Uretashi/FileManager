@@ -1,5 +1,6 @@
 const fs = require('fs');
 const { resolve } = require('path');
+const cors = require("cors");
 const express = require('express');
 
 const FileManager = require('./utils/fileUtils');
@@ -20,6 +21,7 @@ if (!fs.existsSync(fileDirectory)) {
 // fileManager instance with the files directory path
 const fileManager = new FileManager(fileDirectory);
 
+app.use(cors());
 // handlers for post, json data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
