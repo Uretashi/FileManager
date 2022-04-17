@@ -94,10 +94,13 @@ const removeObject = async (removeObjectEvent) => {
 const moveObject = async (moveObjectEvent) => {
     moveObjectEvent.preventDefault();
     const formInputs = moveObjectEvent.target.elements;
+    const newPath = formInputs['new-path-select'].value;
+    const toMove = formInputs['object-to-move-select'].value;
 
     const data = {
-        objectToMove: formInputs['object-to-move-select'].value.substring(1),
-        newPath: formInputs['new-path-select'].value.substring(1) + '/' + formInputs['object-to-move-select'].value.split('/').at(-1)
+        objectToMove: toMove.substring(1),
+        newPath: newPath === '/' ?
+            toMove.split('/').at(-1) : newPath.substring(1) + '/' + toMove.split('/').at(-1)
     }
 
     const res = (await fetch(`${apiUrl}/move`, {
