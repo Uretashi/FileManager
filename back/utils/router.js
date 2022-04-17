@@ -47,7 +47,6 @@ module.exports = (fileManager) => {
         // validate post data
         const data = validatePostParams(req.body, ['objectToMove', 'newPath']);
         // move the object while checking his type
-        console.log(data)
         fileManager.moveFromTo(data.objectToMove, data.newPath, data.objectToMove.includes('.'));
         res.status(200).json({ message: `Folder, file ${data.objectToMove} successfully moved to ${data.newPath} !` });
     });

@@ -11,11 +11,13 @@ const app = express();
 const PORT = 4999;
 
 // resolve file directory path
-const fileDirectory = resolve(__dirname, '../fileDirectory');
+const fileDirectory = resolve(__dirname, '../fileDirectory2');
 
 // check if the files directory exists
 if (!fs.existsSync(fileDirectory)) {
-    throw new Error(`Directory : ${fileDirectory} doesn't exists`);
+    console.log(`Directory : ${fileDirectory} doesn't exists, we will create one for you...`);
+    fs.mkdirSync(fileDirectory);
+    console.log('Directory created successfully !')
 }
 
 // fileManager instance with the files directory path

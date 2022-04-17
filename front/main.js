@@ -2,6 +2,7 @@ const apiUrl = 'http://localhost:4999';
 
 const getFolderContents = async () => {
     const res = (await fetch(`${apiUrl}/folderContents`).then(res => res.json()));
+    res.data.folders.push('/');
 
     const fileSelectSelect = document.getElementById('file-select');
     const createObjectSelect = document.getElementById('create-select');
@@ -56,8 +57,12 @@ const createNewObject = async (newObjectEvent) => {
     const formInputs = newObjectEvent.target.elements;
     const checkName = validateObjectName(formInputs['new-object-name-input'].value, formInputs['create-object-select-type'].value);
 
+    const pathTo = formInputs['create-at-select'].value.length > 1 ?
+        `${formInputs['create-at-select'].value.substring(1)}/${checkName}` :
+        `${checkName}`
+
     const data = {
-        objectName: `${formInputs['create-at-select'].value.substring(1)}/${checkName}`,
+        objectName: pathTo,
         data: formInputs['create-object-select-type'].value === 'file' ? formInputs['file-data-textarea'].value : null
     }
 
