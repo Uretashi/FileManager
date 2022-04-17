@@ -22,7 +22,7 @@ module.exports = async (command, initPath, shellPath = null) => {
     }
     // try to execute the command while going to the files directory path
     try {
-        commandRes = await execPromise(`cd "${initPath}" ${secondCommandChar} ${command}`, { shell: shellPath });
+        commandRes = await execPromise(`cd "${initPath}" ${secondCommandChar} ${command}`, { shell: shellPath, encoding: 'utf8', });
     } catch(err) {
         commandRes = err;
     }

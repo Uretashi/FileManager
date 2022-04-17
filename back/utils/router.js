@@ -18,6 +18,12 @@ module.exports = (fileManager) => {
 
         res.status(200).json({ message: 'Directory readed successfully !', data: returnFuncRes });
     });
+    // read a file content
+    appRouter.get('/fileContent/:path', (req, res) => {
+        const path = req.params.path.split('_').join('/');
+        const fileData = fileManager.readFileContent(path);
+        res.status(200).json({ message: 'File readed successfully !', data: fileData });
+    });
     // remove a file/folder
     appRouter.get('/remove/:toRemove', (req, res) => {
         // create path from the toRemove parameter
@@ -31,7 +37,7 @@ module.exports = (fileManager) => {
         // validate post data
         const data = validatePostParams(req.body, ['objectName', 'data']);
         // add the .txt extension if the new object is a file and doesn't contains any extension
-        if (data && !/.[A-Za-z]{1, 3}}$/.test(data.objectName)) data.objectName = `${data.objectName}.txt`;
+        if (data.data && !/\.([A-Za-z]{1,3})$/.test(data.objectName)) data.objectName = `${data.objectName}.txt`;
 
         fileManager.createInDirectory(data.objectName, data.data);
         res.status(200).json({ message: `Folder, file ${data.objectName} created successfully !` });
@@ -41,6 +47,7 @@ module.exports = (fileManager) => {
         // validate post data
         const data = validatePostParams(req.body, ['objectToMove', 'newPath']);
         // move the object while checking his type
+        console.log(data)
         fileManager.moveFromTo(data.objectToMove, data.newPath, data.objectToMove.includes('.'));
         res.status(200).json({ message: `Folder, file ${data.objectToMove} successfully moved to ${data.newPath} !` });
     });
@@ -48,7 +55,7 @@ module.exports = (fileManager) => {
     appRouter.post('/command', (req, res) => {
         // validate post data
         const data = validatePostParams(req.body, ['command', 'shellPath']);
-        executeCommand(data.command, resolve(fileManager.fileDirectory), data.shellPath ? data.shellPath : null).then(output => res.status(200).json({ output: output }));
+        executeCommand(data.command, resolve(fileManager.fileDirectory), data.shellPath ? data.shellPath : null).then(output => res.status(200).json({ data: output }));
     });
     return appRouter;
 };
