@@ -11,7 +11,7 @@ const app = express();
 const PORT = 4999;
 
 // resolve file directory path
-const fileDirectory = resolve(__dirname, '../fileDirectory2');
+const fileDirectory = resolve(__dirname, '../fileDirectory');
 
 // check if the files directory exists
 if (!fs.existsSync(fileDirectory)) {
