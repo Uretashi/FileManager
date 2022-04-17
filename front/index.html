@@ -5,157 +5,122 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
-    <title>JSP</title>
+    <title>File manager service</title>
 </head>
 
 <body>
     <div class="col-xs-1 border border-secondary mt-1 mb-1" align="center">
         <h1>Lister le contenu d'un fichier</h1>
-        <form action="" method="post" class="">
+        <form onsubmit="readFileContent(event)" class="">
             <div class="">
                 <select name="file-select" id="file-select">
                     <option value="/">/</option>
-                    <option value="/abc/">/abc/</option>
-                    <option value="/abc/def/">/abc/def/</option>
-                    <option value="/undeuxtrois/">/undeuxtrois/</option>
                 </select>
                 <input type="submit" value="Lister">
             </div>
         </form>
+        <div id="file-content-div"></div>
     </div>
 
     <div class="col-xs-1 border border-secondary mt-1 mb-1" align="center">
         <h1>Créer un fichier / Créer un dossier</h1>
-        <form action="" method="post" class="">
+        <form onsubmit="createNewObject(event)">
             <div class="">
                 <label for="list">Selectionner ce que vous voulez créer </label>
                 </br>
-                <select name="file-directory" id="file-directory">
+                <select name="create-object-select-type" id="create-choose-object-select">
                     <option value="file">Fichier</option>
                     <option value="directory">Dossier</option>
                 </select>
                 </br>
                 <label for="list">Choisissez le chemin </label>
                 </br>
-                <select name="path" id="path">
+                <select name="create-at-select" id="create-select">
                     <option value="/">/</option>
-                    <option value="/abc/">/abc/</option>
-                    <option value="/abc/def/">/abc/def/</option>
-                    <option value="/undeuxtrois/">/undeuxtrois/</option>
                 </select>
                 </br>
                 <label for="list">Choisissez un nom </label>
                 </br>
-                <input type="text" value="">
+                <input name="new-object-name-input" type="text" required="required">
+                </br>
+                <textarea name="file-data-textarea" id="new-file-data" cols="30" rows="10"></textarea>
                 </br>
                 <input type="submit" value="Créer">
             </div>
         </form>
+        <p id="is-object-created"></p>
     </div>
 
     <div class="col-xs-1 border border-secondary mt-1 mb-1" align="center">
         <h1>Supprimer un fichier / Supprimer un dossier</h1>
-        <form action="" method="post" class="">
+        <form onsubmit="removeObject(event)">
             <div class="">
                 <label for="list">Selectionner ce que vous voulez supprimer </label>
                 </br>
-                <select name="file-directory" id="file-directory">
+                <select name="file-directory" id="delete-choose-object-select">
                     <option value="file">Fichier</option>
                     <option value="directory">Dossier</option>
                 </select>
                 </br>
                 <label for="list">Choisissez le chemin </label>
                 </br>
-                <select name="path" id="path">
+                <select name="delete-object-select" id="delete-select">
                     <option value="/">/</option>
-                    <option value="/abc/">/abc/</option>
-                    <option value="/abc/def/">/abc/def/</option>
-                    <option value="/undeuxtrois/">/undeuxtrois/</option>
                 </select>
                 </br>
-                <label for="list">Choisissez le nom </label>
-                </br>
-                <select name="name" id="name">
-                    <option value="/">/</option>
-                    <option value="/abc/">/abc/</option>
-                    <option value="/abc/def/">/abc/def/</option>
-                    <option value="/undeuxtrois/">/undeuxtrois/</option>
-                </select>
-                </br>
-                <input type="submit" value="Créer">
+                <input type="submit" value="Supprimer">
             </div>
         </form>
+        <p id="is-object-deleted"></p>
     </div>
 
     <div class="col-xs-1 border border-secondary mt-1 mb-1" align="center">
         <h1>Déplacer un fichier / Déplacer un dossier</h1>
-        <label for="list">Choisissez ce que vous voulez déplacer </label>
-        </br>
-        <select name="file-directory" id="file-directory">
-            <option value="file">Fichier</option>
-            <option value="directory">Dossier</option>>
-        </select>
         <div class="container">
             <div class="row">
                 <div class="col">
-                    <form>
-                        <label for="list">Choisissez le chemin </label>
+                    <form onsubmit="moveObject(event)">
+                        <label for="list">Choisissez ce que vous voulez déplacer </label>
                         </br>
-                        <select name="path" id="path">
-                            <option value="/">/</option>
-                            <option value="/abc/">/abc/</option>
-                            <option value="/abc/def/">/abc/def/</option>
-                            <option value="/undeuxtrois/">/undeuxtrois/</option>
+                        <select name="file-directory" id="move-choose-object-select">
+                            <option value="file">Fichier</option>
+                            <option value="directory">Dossier</option>
                         </select>
+                        <br>
+                        <label for="object-to-move-select">Choisissez l'objet à déplacer </label>
                         </br>
-                        <label for="list">Choisissez le nom </label>
+                        <select name="object-to-move-select" id="change-object-path-select"></select>
                         </br>
-                        <select name="name" id="name">
-                            <option value="/">/</option>
-                            <option value="/abc/">/abc/</option>
-                            <option value="/abc/def/">/abc/def/</option>
-                            <option value="/undeuxtrois/">/undeuxtrois/</option>
-                        </select>
+                        <!-- <label for="new-name">Choisissez le nouveau nom (si souhaité)</label> -->
+                        </br>
+                        <input type="new-name">
+                        </br>
+                        <label for="new-path-select">Choisissez le nouveau chemin </label>
+                        </br>
+                        <select name="new-path-select" id="new-path-select"></select>
+                        </br>
+                        <input type="submit" value="Déplacer">
                     </form>
-                </div>
-                <div class="col">
-                    <label for="list">Choisissez le nouveau chemin </label>
-                    </br>
-                    <select name="path" id="path">
-                        <option value="/">/</option>
-                        <option value="/abc/">/abc/</option>
-                        <option value="/abc/def/">/abc/def/</option>
-                        <option value="/undeuxtrois/">/undeuxtrois/</option>
-                    </select>
-                    </br>
-                    <label for="list">Choisissez le nouveau nom </label>
-                    </br>
-                    <select name="name" id="name">
-                        <option value="/">/</option>
-                        <option value="/abc/">/abc/</option>
-                        <option value="/abc/def/">/abc/def/</option>
-                        <option value="/undeuxtrois/">/undeuxtrois/</option>
-                    </select>
-
+                    <p id="is-object-moved"></p>
                 </div>
             </div>
+            <p id="is-object-moved"></p>
         </div>
-
-        </br>
-        <input type="submit" value="Déplacer">
     </div>
 
     <div class="col-xs-1 border border-secondary mt-1 mb-1" align="center">
         <h1>Exécuter une commande</h1>
-        <form action="" method="post" class="">
+        <form onsubmit="executeCommand(event)">
             <div class="">
                 <label for="list">Exécuter une commande </label>
-                <input type="text" value="">
+                <input name="command-input" type="text" required>
                 <input type="submit" value="Exécuter">
             </div>
         </form>
+        <p id="command-output"></p>
     </div>
 
 </body>
+<script type="text/javascript" src="main.js"></script>
 
 </html>
